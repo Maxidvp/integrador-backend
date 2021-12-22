@@ -2,10 +2,6 @@ package com.integrador;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
-
-@Service
 public interface IPersonaService {
 	
 	// metodo para traer todas las personas
