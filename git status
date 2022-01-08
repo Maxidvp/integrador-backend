@@ -1,0 +1,29 @@
+[33mcommit 6ca6d33c15751209ba4dc7b143571512833e4fc9[m[33m ([m[1;36mHEAD -> [m[1;32mpractica1[m[33m, [m[1;31morigin/master[m[33m, [m[1;32mmaster[m[33m)[m
+Author: Rocabado Cristian <cmrocabado@gmail.com>
+Date:   Wed Dec 22 11:22:21 2021 -0300
+
+    Version 0.1.0, implementacion de metodos CRUD
+
+[33mcommit 891cd308b10280e623034a664226abe93b348824[m
+Author: Rocabado Cristian <cmrocabado@gmail.com>
+Date:   Fri Dec 17 23:05:40 2021 -0300
+
+    ABML complemente implementado con el ejemplo Persona
+
+[33mcommit fab2ced16ca14da0d95e513bc19676a4272dac8b[m
+Author: Rocabado Cristian <cmrocabado@gmail.com>
+Date:   Fri Dec 17 14:58:18 2021 -0300
+
+    ABML agregado pero sin funcionalidad, ultimo commit con controllador experimental
+
+[33mcommit 22738714c3b00f160ea85e5204b9f04f43b88765[m
+Author: Rocabado Cristian <cmrocabado@gmail.com>
+Date:   Fri Dec 17 01:54:46 2021 -0300
+
+    JPA implementado, ejemplo de creacion de base de datos
+
+[33mcommit a939dc60e45fa5fc72f77eabe95778ed54ea1e73[m
+Author: Rocabado Cristian <cmrocabado@gmail.com>
+Date:   Thu Dec 16 21:50:13 2021 -0300
+
+    "Creacion del master"

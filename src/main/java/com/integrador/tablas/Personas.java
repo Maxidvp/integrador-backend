@@ -1,27 +1,49 @@
-package com.integrador;
+package com.integrador.tablas;
 
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 
 import lombok.Data;
 
 
-
+@Data
 @Entity 
-public class Persona {
+public class Personas {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private Long id;
 	private String nombre;
 	private String apellido;
+	private String direccion;
+	private String telefono;
+	private String email;
 	private int edad;
+	private String src;
+	@OneToMany(targetEntity = Educaciones.class ,cascade = CascadeType.ALL)//mappedBy = "persona"
+	@JoinColumn(name = "fk_educaciones", referencedColumnName ="id")
+    private List<Educaciones> educaciones;
 	
+	@OneToMany(targetEntity = Experiencias.class ,cascade = CascadeType.ALL)
+	@JoinColumn(name = "fk_experiencias", referencedColumnName ="id")
+    private List<Experiencias> experiencias;
 	
-	public Persona() {}
+	@OneToMany(targetEntity = Habilidades.class ,cascade = CascadeType.ALL)
+	@JoinColumn(name = "fk_habilidades", referencedColumnName ="id")
+    private List<Habilidades> habilidades;
+	
+	@OneToMany(targetEntity = Proyectos.class ,cascade = CascadeType.ALL)
+	@JoinColumn(name = "fk_proyectos", referencedColumnName ="id")
+    private List<Proyectos> proyectos;
+	/*public Persona() {}
 	
 	public Persona(Long id, String nombre, String apellido, int edad) {
 		super();
@@ -58,6 +80,6 @@ public class Persona {
 	@Override
 	public String toString() {
 		return "Persona [id=" + id + ", nombre=" + nombre + ", apellido=" + apellido + ", edad=" + edad + "]";
-	}
+	}*/
 
 }

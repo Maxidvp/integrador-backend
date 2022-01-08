@@ -10,40 +10,38 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.integrador.IPersonaService;
-import com.integrador.Persona;
+import com.integrador.modelo.IPersonasService;
+import com.integrador.tablas.Personas;
 
-import netscape.javascript.JSObject;
 
 @RestController
 @CrossOrigin(origins = "*")/*Revisar si se puede quitar en el servidor final*/
 public class PersonaController {
 	
 	@Autowired
-	private IPersonaService interPersona;
+	private IPersonasService interPersona;
 	
 	@GetMapping ("/personas/traer")
-	public List<Persona> getPersona(){
+	//@ResponseBody
+	public List<Personas> getPersona(){
 		System.out.println("Estoy entraer todo");
 		return interPersona.getPersona();
 	}
 	
 	
 	@GetMapping ("/personas/buscar/{id}")
-	public Persona serchPersona(@PathVariable Long id){
+	public Personas serchPersona(@PathVariable Long id){
 			System.out.println("Estoy entraer uno");
 			return interPersona.findPersona(id);
 	}
 	
 	@PostMapping ("/personas/crear")
-	public Persona createPersona(@RequestBody Persona persona){
+	public Personas createPersona(@RequestBody Personas persona){
 		System.out.println("Estoy en crear");
 		interPersona.savePersona(persona);
 		return persona;
-
 	}
 	
 	@DeleteMapping ("/personas/borrar/{id}")
@@ -55,7 +53,7 @@ public class PersonaController {
 	}
 	
 	@PutMapping ("/personas/editar/{id}")
-	public String editPersona (@PathVariable Long id, @RequestBody Persona persona){
+	public String editPersona (@PathVariable Long id, @RequestBody Personas persona){
 		System.out.println("El id es = "+id);
 		//busco la persona en cuestion
 		/*Persona persona = interPersona.findPersona(id);
