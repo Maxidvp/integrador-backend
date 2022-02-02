@@ -19,7 +19,7 @@ import lombok.Data;
 public class Personas {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String nombre;
 	private String apellido;

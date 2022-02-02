@@ -16,7 +16,7 @@ public class Educaciones {
 	private Long id;
 	private String periodo;
 	private String lugar;
-	private String actividades;
+	private String titulo;
 	private String src;
 	
 	/*@ManyToOne
