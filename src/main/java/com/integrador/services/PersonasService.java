@@ -1,15 +1,17 @@
-package com.integrador.modelo;
+package com.integrador.services;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.integrador.repositories.PersonasRepository;
+import com.integrador.repositories.UsuarioRepository;
 import com.integrador.tablas.Personas;
 
 @Service
 public class PersonasService implements IPersonasService{
-
+	
 	@Autowired
 	private PersonasRepository personaRepository;
 	
@@ -20,8 +22,8 @@ public class PersonasService implements IPersonasService{
 	}
 
 	@Override
-	public void savePersona(Personas persona) {
-		personaRepository.save(persona);
+	public Personas savePersona(Personas persona) {
+		return personaRepository.save(persona);
 	}
 
 	@Override
@@ -35,4 +37,13 @@ public class PersonasService implements IPersonasService{
 		return persona;
 	}
 
+	@Override
+	public String getUsernameById(Long id) {
+		return personaRepository.getUsernameById(id);
+	}
+
+	@Override
+	public Long getIdByUsername(String username) {
+		return personaRepository.getIdByUsername(username);
+	}
 }

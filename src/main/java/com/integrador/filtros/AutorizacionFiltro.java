@@ -36,8 +36,8 @@ public class AutorizacionFiltro extends OncePerRequestFilter{
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		if(request.getServletPath().equals("/api/login") || request.getServletPath().equals("/api/token/refresh")) {
-			filterChain.doFilter(request, response);
 			System.out.println("Autorizacion filtro - 40");
+			filterChain.doFilter(request, response);
 		}else {
 			System.out.println("Autorizacion filtro - 42");
 			String authorizationHeader=request.getHeader(HttpHeaders.AUTHORIZATION);
@@ -56,6 +56,8 @@ public class AutorizacionFiltro extends OncePerRequestFilter{
 					stream(roles).forEach(role -> {
 						authorities.add(new SimpleGrantedAuthority(role));
 					});
+					System.out.println("Autorizacion filtro - 59: username Subject");
+					System.out.println(username);
 					UsernamePasswordAuthenticationToken authenticationToken = 
 							new UsernamePasswordAuthenticationToken(username,null,authorities);
 					SecurityContextHolder.getContext().setAuthentication(authenticationToken);

@@ -17,3 +17,8 @@ Este proyecto fue generado en Spring Boot [Spring Boot](https://spring.io/projec
 
 	Implementación del sistema de usuario y contraseña para el registro e inicio de sesión
 	Implementación del sistema de seguridad por dos tokens JWT, (access token y refresh token)
+
+# Versión 0.4.0
+    Ahora los usuarios pueden tener su propio portfolio para edición a partir de una copia del autor o uno vacío
+    Se incremento la seguridad para que los usuarios solo puedan editar su persona asociada
+    Base de datos expandida para incorporar la tabla de redes sociales

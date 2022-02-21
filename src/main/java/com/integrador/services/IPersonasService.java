@@ -1,4 +1,4 @@
-package com.integrador.modelo;
+package com.integrador.services;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ public interface IPersonasService {
 	public List<Personas> getPersona();
 	
 	//metodo para dar de alta una persona
-	public void savePersona (Personas persona);
+	public Personas savePersona (Personas persona);
 	
 	//metodo para borrar una persona
 	public void deletePersona (Long id);
@@ -18,4 +18,7 @@ public interface IPersonasService {
 	//metodo para encontrar una persona
 	public Personas findPersona (Long id);
 	
+	String getUsernameById(Long id);
+	
+	Long getIdByUsername(String username);
 }
