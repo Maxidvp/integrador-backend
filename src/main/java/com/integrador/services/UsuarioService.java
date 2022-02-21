@@ -1,4 +1,4 @@
-package com.integrador.modelo;
+package com.integrador.services;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.integrador.repositories.RoleRepository;
+import com.integrador.repositories.UsuarioRepository;
 import com.integrador.tablas.Role;
 import com.integrador.tablas.Usuario;
 
@@ -45,7 +47,7 @@ public class UsuarioService implements IUsuarioService, UserDetailsService {
 	
 	@Override
 	public Usuario saveUser(Usuario user) {
-		log.info("Guardando nuevo usuario {} en la BD",user.getName());
+		log.info("Guardando nuevo usuario {} en la BD",user.getUsername());
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		return userRepo.save(user);
 	}
@@ -60,8 +62,11 @@ public class UsuarioService implements IUsuarioService, UserDetailsService {
 	public void addRoleToUser(String username, String roleName) {
 		log.info("Agregando el role {} al usuario {}",roleName,username);
 		Usuario user=userRepo.findByUsername(username);
+		log.info("User: {}",user);
 		Role role=roleRepo.findByName(roleName);
+		log.info("Role: {}",role);
 		user.getRoles().add(role);
+		//userRepo.save(user);
 	}
 
 	@Override
@@ -75,5 +80,18 @@ public class UsuarioService implements IUsuarioService, UserDetailsService {
 		log.info("Trayendo todos los usuarios");
 		return userRepo.findAll();
 	}
+
+
+	@Override
+	public long existeUsername(String username) {
+		return userRepo.countByUsername(username);
+	}
+
+
+	@Override
+	public String traerFotobyUsername(String username) {
+		return userRepo.getFotobyUsername(username);
+	}
+
 
 }

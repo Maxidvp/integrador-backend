@@ -11,19 +11,24 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.integrador.modelo.IUsuarioService;
+import com.integrador.services.IPersonasService;
+import com.integrador.services.IUsuarioService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -31,6 +36,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.integrador.tablas.Personas;
 import com.integrador.tablas.Role;
 import com.integrador.tablas.Usuario;
 
@@ -45,15 +51,48 @@ import lombok.RequiredArgsConstructor;
 public class UsuarioController {
 	private final IUsuarioService userService;
 	
+	@Autowired
+	private IPersonasService interPersona;
+	
+	@GetMapping("/user/{username}")
+	public Usuario traerUsername(@PathVariable String username){
+		System.out.println("traer user");
+		return userService.getUser(username);
+	}
+	
 	@GetMapping("/users")
 	public ResponseEntity<List<Usuario>>getUsers(){
 		return ResponseEntity.ok().body(userService.getUsers());
 	}
 	
+	@GetMapping("/username/{username}")
+	public ResponseEntity<Long> existeUsername(@PathVariable String username){
+		System.out.println("existeusername");
+		return ResponseEntity.ok().body(userService.existeUsername(username));
+	}
+	
+	/*@GetMapping("/usernamebyid/{id}")
+	public String obtenerUsername(@PathVariable Long id){
+		System.out.println("obtenerUsername");
+		return userService.getUsernameById(id);
+	}*/
+	
 	@PostMapping("/user/save")
-	public ResponseEntity<Usuario>saveUser(@RequestBody Usuario user){
+	public ResponseEntity<Usuario>saveUser(@RequestBody Usuario user){//
+		System.out.println("UsuarioController 55");
 		URI uri=URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/apì/user/save").toUriString());
-		return ResponseEntity.created(uri).body(userService.saveUser(user));
+		System.out.println(uri);
+		Usuario usuario = userService.saveUser(user);
+		System.out.println(usuario);
+		userService.addRoleToUser(usuario.getUsername(),"ROLE_USER");
+		System.out.println("despues del rol");
+		
+		Personas persona = new Personas();
+		persona.setApellido("Apellido2");
+		persona.setNombre("Nombre2");
+		//System.out.println(interPersona.savePersona(persona));
+		usuario.setPersona(interPersona.savePersona(persona));
+		return ResponseEntity.created(uri).body(userService.getUser(user.getUsername().toString()));
 	}
 	
 	@PostMapping("/role/save")
@@ -93,6 +132,8 @@ public class UsuarioController {
 				Map<String, String> tokens=new HashMap<>();
 				tokens.put("access_token", access_token);
 				tokens.put("refresh_token", refresh_token);
+				System.out.println("Usuariocontroller 96 - acces_token");
+				System.out.println(access_token);
 				response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 				new ObjectMapper().writeValue(response.getOutputStream(), tokens);
 				
@@ -110,6 +151,14 @@ public class UsuarioController {
 			System.out.println("En el else");
 			//throw new RuntimeException("No se encontro el refresh token");
 		}
+	}
+	
+	@GetMapping("/foto")
+	public ResponseEntity<String> fotoPerfil(){
+		System.out.println("enfoto de perfil");
+		//userService.existeUsername(username)
+		String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+		return ResponseEntity.ok().body(userService.traerFotobyUsername(username));
 	}
 
 }

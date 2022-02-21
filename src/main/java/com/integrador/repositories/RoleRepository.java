@@ -1,4 +1,4 @@
-package com.integrador.modelo;
+package com.integrador.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
