@@ -81,16 +81,24 @@ public class UsuarioService implements IUsuarioService, UserDetailsService {
 		return userRepo.findAll();
 	}
 
-
 	@Override
 	public long existeUsername(String username) {
 		return userRepo.countByUsername(username);
 	}
 
+	@Override
+	public long existeEmail(String email) {
+		return userRepo.countByEmail(email);
+	}
 
 	@Override
 	public String traerFotobyUsername(String username) {
 		return userRepo.getFotobyUsername(username);
+	}
+
+	@Override
+	public String traerUsernamebyEmail(String email) {
+		return userRepo.getUsernamebyEmail(email);
 	}
 
 
