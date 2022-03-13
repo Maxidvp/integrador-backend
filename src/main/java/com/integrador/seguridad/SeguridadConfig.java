@@ -2,6 +2,7 @@ package com.integrador.seguridad;
 
 import java.util.List;
 
+import com.integrador.repositories.UsuarioRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class SeguridadConfig extends WebSecurityConfigurerAdapter{//Para sobreescribir el usuario a loguear
 	private final UserDetailsService userDetailsService;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final UsuarioRepository userRepo;
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -44,13 +46,13 @@ public class SeguridadConfig extends WebSecurityConfigurerAdapter{//Para sobrees
 		      return cors;
 		    });
 		
-		AutenticacionFiltro customAuthenticationFilter=new AutenticacionFiltro(authenticationManagerBean());
+		AutenticacionFiltro customAuthenticationFilter=new AutenticacionFiltro(authenticationManagerBean(), userRepo);
 		customAuthenticationFilter.setFilterProcessesUrl("/api/login");
 		
 		
 		http.csrf().disable();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		http.authorizeRequests().antMatchers("/api/login","/api/user/save","/api/user/**","/api/username/**","/personas/usernamebyid/**","/api/users","/personas/buscar/**","/personas/instancia/**","/personas/traer","/api/token/refresh","/api/foto").permitAll();
+		http.authorizeRequests().antMatchers("/api/login","/api/user/save","/api/user/**","/api/username/**","/api/usernamelibre/**","/api/emaillibre/**","/personas/usernamebyid/**","/api/users","/personas/buscar/**","/personas/instancia/**","/personas/traer","/api/token/refresh","/api/foto").permitAll();
 		http.authorizeRequests().antMatchers(HttpMethod.GET,"/api/users","/personas/editar/**").hasAnyAuthority("ROLE_ADMIN");
 		http.authorizeRequests().antMatchers(HttpMethod.POST,"/api/user/save/**").hasAnyAuthority("ROLE_USER");
 		http.authorizeRequests().anyRequest().authenticated();

@@ -21,7 +21,11 @@ public interface IUsuarioService {
 	List<Usuario>getUsers();
 	
 	long existeUsername(String username);
+
+	long existeEmail(String email);
 	
 	//String getUsernameById(Long id);
 	String traerFotobyUsername(String username);
+
+	String traerUsernamebyEmail(String email);
 }

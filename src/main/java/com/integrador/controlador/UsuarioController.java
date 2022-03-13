@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -65,23 +64,36 @@ public class UsuarioController {
 		return ResponseEntity.ok().body(userService.getUsers());
 	}
 	
-	@GetMapping("/username/{username}")
+	/*@GetMapping("/usernamelibre/{username}")
 	public ResponseEntity<Long> existeUsername(@PathVariable String username){
-		System.out.println("existeusername");
+		System.out.println("em username libre");
 		return ResponseEntity.ok().body(userService.existeUsername(username));
 	}
-	
-	/*@GetMapping("/usernamebyid/{id}")
-	public String obtenerUsername(@PathVariable Long id){
-		System.out.println("obtenerUsername");
-		return userService.getUsernameById(id);
+	@GetMapping("/emaillibre/{email}")
+	public ResponseEntity<Long> existeEmail(@PathVariable String email){
+		System.out.println("en email libre");
+		return ResponseEntity.ok().body(userService.existeEmail(email));
 	}*/
+	@GetMapping("/usernamelibre/{username}")
+	public Long existeUsername(@PathVariable String username){
+		System.out.println("em username libre");
+		return userService.existeUsername(username);
+	}
+	@GetMapping("/emaillibre/{email}")
+	public Long existeEmail(@PathVariable String email){
+		System.out.println("en email libre");
+		return userService.existeEmail(email);
+	}
 	
 	@PostMapping("/user/save")
 	public ResponseEntity<Usuario>saveUser(@RequestBody Usuario user){//
 		System.out.println("UsuarioController 55");
-		URI uri=URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/apì/user/save").toUriString());
+		URI uri=URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
 		System.out.println(uri);
+		if(existeUsername(user.getUsername())!=0 || existeEmail(user.getEmail())!=0 ){
+			System.out.println("Se detecto un problea de seguridad");
+			return null;
+		}
 		Usuario usuario = userService.saveUser(user);
 		System.out.println(usuario);
 		userService.addRoleToUser(usuario.getUsername(),"ROLE_USER");
@@ -92,12 +104,12 @@ public class UsuarioController {
 		persona.setNombre("Nombre2");
 		//System.out.println(interPersona.savePersona(persona));
 		usuario.setPersona(interPersona.savePersona(persona));
-		return ResponseEntity.created(uri).body(userService.getUser(user.getUsername().toString()));
+		return ResponseEntity.created(uri).body(userService.getUser(user.getUsername()));
 	}
 	
 	@PostMapping("/role/save")
 	public ResponseEntity<Role>saveRole(@RequestBody Role role){
-		URI uri=URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/apì/role/save").toUriString());
+		URI uri=URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/role/save").toUriString());
 		return ResponseEntity.created(uri).body(userService.saveRole(role));
 	}
 	
