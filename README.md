@@ -2,6 +2,10 @@
 
 Este proyecto fue generado en Spring Boot [Spring Boot](https://spring.io/projects/spring-boot) version 2.6.2
 
+### Versión 1.0.0 Primer deploy
+    Modificación de la DB para indicar portfolios públicos
+    Se configuró la seguridad para poner en efecto los roles
+
 ### Versión 0.5.0
     Ahora se admite el acceso con email
     Se aumento la seguridad en la edición y en el registro

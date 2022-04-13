@@ -52,33 +52,24 @@ public class UsuarioController {
 	
 	@Autowired
 	private IPersonasService interPersona;
-	
+
+	@GetMapping("/users")
+	public ResponseEntity<List<Usuario>>getUsers(){
+		return ResponseEntity.ok().body(userService.getUsers());
+	}
+
 	@GetMapping("/user/{username}")
 	public Usuario traerUsername(@PathVariable String username){
 		System.out.println("traer user");
 		return userService.getUser(username);
 	}
-	
-	@GetMapping("/users")
-	public ResponseEntity<List<Usuario>>getUsers(){
-		return ResponseEntity.ok().body(userService.getUsers());
-	}
-	
-	/*@GetMapping("/usernamelibre/{username}")
-	public ResponseEntity<Long> existeUsername(@PathVariable String username){
-		System.out.println("em username libre");
-		return ResponseEntity.ok().body(userService.existeUsername(username));
-	}
-	@GetMapping("/emaillibre/{email}")
-	public ResponseEntity<Long> existeEmail(@PathVariable String email){
-		System.out.println("en email libre");
-		return ResponseEntity.ok().body(userService.existeEmail(email));
-	}*/
+
 	@GetMapping("/usernamelibre/{username}")
 	public Long existeUsername(@PathVariable String username){
 		System.out.println("em username libre");
 		return userService.existeUsername(username);
 	}
+
 	@GetMapping("/emaillibre/{email}")
 	public Long existeEmail(@PathVariable String email){
 		System.out.println("en email libre");
@@ -100,8 +91,9 @@ public class UsuarioController {
 		System.out.println("despues del rol");
 		
 		Personas persona = new Personas();
-		persona.setApellido("Apellido2");
-		persona.setNombre("Nombre2");
+		persona.setApellido("Apellido");
+		persona.setNombre("Nombre");
+		persona.setPublico(false);
 		//System.out.println(interPersona.savePersona(persona));
 		usuario.setPersona(interPersona.savePersona(persona));
 		return ResponseEntity.created(uri).body(userService.getUser(user.getUsername()));
@@ -168,11 +160,9 @@ public class UsuarioController {
 	@GetMapping("/foto")
 	public ResponseEntity<String> fotoPerfil(){
 		System.out.println("enfoto de perfil");
-		//userService.existeUsername(username)
 		String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
 		return ResponseEntity.ok().body(userService.traerFotobyUsername(username));
 	}
-
 }
 
 
