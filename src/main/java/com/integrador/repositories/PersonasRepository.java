@@ -8,10 +8,13 @@ import com.integrador.tablas.Personas;
 
 @Repository
 public interface PersonasRepository extends JpaRepository<Personas, Long>{
-	@Query(value = "SELECT `username` FROM `personas` WHERE id=?1", nativeQuery = true)
+	@Query(value = "SELECT username FROM personas WHERE id=?1", nativeQuery = true)
 	String getUsernameById(Long id);
 	
-	@Query(value = "SELECT `persona_id` FROM `usuario` WHERE username=?1", nativeQuery = true)
+	@Query(value = "SELECT persona_id FROM usuario WHERE username=?1", nativeQuery = true)
 	Long getIdByUsername(String username);
+
+	/*@Query(value = "SELECT persona_id FROM usuario WHERE username=?1", nativeQuery = true)
+	Long togglePublic(String username);*/
 }
 

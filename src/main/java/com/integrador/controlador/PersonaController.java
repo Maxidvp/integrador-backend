@@ -32,12 +32,32 @@ public class PersonaController {
 	@Autowired
 	private IPersonasService interPersona;
 
-	
 	@GetMapping ("/traer")
-	//@ResponseBody
 	public List<Personas> getPersona(){
 		System.out.println("Estoy entraer todo");
 		return interPersona.getPersona();
+	}
+
+	@GetMapping ("/publico/{username}")
+	public Personas personaPublica(@PathVariable String username){
+		System.out.println("personaPublica:");
+		Long id=obtenerId(username);
+		System.out.println("El id es:");
+		System.out.println(id);
+		if(id != null){
+			Personas persona = interPersona.findPersona(id);
+			System.out.println("Despues del sql");
+			if(persona.isPublico()){
+				System.out.println("En el if true");
+				return persona;
+			}else{
+				System.out.println("En el if false");
+				return null;
+			}
+		}else {
+			return null;
+		}
+
 	}
 	
 	@GetMapping ("/buscar/{id}")
@@ -53,8 +73,7 @@ public class PersonaController {
 		System.out.println(id);
 		return interPersona.findPersona(id);
 	}
-	
-	
+
 	@Autowired
     private EntityManager entityManager;	
 		
@@ -144,6 +163,7 @@ public class PersonaController {
 					null,
 					null,
 					null,
+					false,
 					new ArrayList<>(),
 					new ArrayList<>(),
 					new ArrayList<>(),
@@ -151,11 +171,9 @@ public class PersonaController {
 					new ArrayList<>()
 			);
 		}
-
 		System.out.println("Asi quedo la persona: ");
 		System.out.println(personaUsuario);
 		return interPersona.savePersona(personaUsuario);
-		
 	}
 	
 	@PostMapping ("/crear")
@@ -244,7 +262,7 @@ public class PersonaController {
 
 	}
 	
-	@GetMapping("/usernamebyid/{id}")
+	//@GetMapping("/usernamebyid/{id}")
 	public String obtenerUsername(@PathVariable Long id){
 		System.out.println("obtenerUsername");
 		return interPersona.getUsernameById(id);
@@ -253,6 +271,18 @@ public class PersonaController {
 	private Long obtenerId(String username){
 		System.out.println("obtenerId");
 		return interPersona.getIdByUsername(username);
+	}
+
+	@GetMapping ("/togglepublico/{bool}")
+	public String togglePublico(@PathVariable Boolean bool){
+		System.out.println("En togglePublico");
+
+		String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+		Long id=obtenerId(username);
+		Personas persona = interPersona.findPersona(id);
+		persona.setPublico(bool);
+		interPersona.savePersona(persona);
+		return username;
 	}
 }
 

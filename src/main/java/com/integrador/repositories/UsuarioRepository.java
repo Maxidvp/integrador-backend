@@ -13,10 +13,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario,Long>{
 
 	long countByEmail(String email);
 	
-	@Query(value = "SELECT `foto` FROM `personas` WHERE id=(SELECT `persona_id` FROM `usuario` WHERE username=?1)", nativeQuery = true)
+	@Query(value = "SELECT foto FROM personas WHERE id=(SELECT persona_id FROM usuario WHERE username=?1)", nativeQuery = true)
 	String getFotobyUsername(String username);
 
-	@Query(value = "SELECT `username` FROM `usuario` WHERE email=?1", nativeQuery = true)
+	@Query(value = "SELECT username FROM usuario WHERE email=?1", nativeQuery = true)
 	String getUsernamebyEmail(String email);
 	
 	/*@Query(value = "SELECT `username` FROM `usuario` WHERE id=?1", nativeQuery = true)
