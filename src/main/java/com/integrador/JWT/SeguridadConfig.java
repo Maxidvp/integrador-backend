@@ -1,7 +1,8 @@
-package com.integrador.seguridad;
+package com.integrador.JWT;
 
 import java.util.List;
 
+import com.integrador.JWT.CrearJWT;
 import com.integrador.repositories.UsuarioRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,8 +17,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
-import com.integrador.filtros.AutenticacionFiltro;
-import com.integrador.filtros.AutorizacionFiltro;
+import com.integrador.JWT.AutenticacionFiltro;
+import com.integrador.JWT.AutorizacionFiltro;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,52 +27,56 @@ public class SeguridadConfig extends WebSecurityConfigurerAdapter{//Para sobrees
 	private final UserDetailsService userDetailsService;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	private final UsuarioRepository userRepo;
+	private final CrearJWT crearJWT;
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		System.out.println("SeguridadConfig - configure auth");
 		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
-		System.out.println("SeguridadConfig - 32");
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		System.out.println("Autorizacion filtro - 37");
+		System.out.println("SeguridadConfig - configure http");
 		//Cambia la url en la que se realiza el logueo
 		http.cors().configurationSource(request -> {
 		      var cors = new CorsConfiguration();
-		      cors.setAllowedOrigins(List.of("*"));//"http://localhost:4200", "http://192.168.0.5:4200"
+		      cors.setAllowedOrigins(List.of("*"));//"http://localhost:4200", "http://192.168.0.5:4200", ""
 		      cors.setAllowedMethods(List.of("*"));//"GET","POST", "PUT", "DELETE", "OPTIONS"
 		      cors.setAllowedHeaders(List.of("*"));
 		      return cors;
 		    });
 		
-		AutenticacionFiltro customAuthenticationFilter=new AutenticacionFiltro(authenticationManagerBean(), userRepo);
-		customAuthenticationFilter.setFilterProcessesUrl("/api/login");
+		AutenticacionFiltro customAuthenticationFilter=new AutenticacionFiltro(authenticationManagerBean(), userRepo, crearJWT);
+		customAuthenticationFilter.setFilterProcessesUrl("/usuario/login");
 		
 		
 		http.csrf().disable();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.authorizeRequests().antMatchers(
-				"/api/login",
-				"/api/user/save",
-				"/api/user/**",
-				"/api/usernamelibre/**",
-				"/api/emaillibre/**",
-				"/api/token/refresh",
-				"/personas/buscar/1",
-				"/personas/publico/**"
+				"/usuario/login",
+				"/usuario/user/save",
+				"/usuario/user/**",
+				"/usuario/usernamelibre/**",
+				"/usuario/emaillibre/**",
+				"/usuario/token/refresh",
+				"/persona/buscar/1",
+				"/persona/publico/**"
 		).permitAll();
 		http.authorizeRequests().antMatchers(
-				"/api/users",
-				"/personas/traer"
+				"/usuario/users",
+				"/persona/traer",
+				"/persona/borrar/**"
 		).hasAnyAuthority("ROLE_ADMIN");
 		http.authorizeRequests().antMatchers(
-				"/api/foto",
-				"/api/user/save/**",
-				"/personas/buscar/**",
-				"/personas/instancia/**",
-				"/personas/togglepublico/**",
-				"/personas/editar"
+				"/usuario/foto",
+				"/usuario/user/save/**",
+				"/persona/buscar/**",
+				"/persona/instancia/**",
+				"/persona/togglepublico/**",
+				"/persona/agregar/**",
+				"/persona/editar/**",
+				"/persona/eliminar/**"
 		).hasAnyAuthority("ROLE_USER");
 		http.authorizeRequests().anyRequest().authenticated();
 		//http.authorizeRequests().anyRequest().permitAll();//permite todo
@@ -79,14 +84,14 @@ public class SeguridadConfig extends WebSecurityConfigurerAdapter{//Para sobrees
 		//http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
 		//Si se cambia la url del login
 		http.addFilter(customAuthenticationFilter);
-		http.addFilterBefore(new AutorizacionFiltro(), UsernamePasswordAuthenticationFilter.class);
+		http.addFilterBefore(new AutorizacionFiltro(crearJWT), UsernamePasswordAuthenticationFilter.class);
 
 	}
 
 	@Bean
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception{
-		System.out.println("Autorizacion filtro - 69");
+		System.out.println("SeguridadConfig - authenticationManagerBean");
 		return super.authenticationManagerBean();
 	}
 }

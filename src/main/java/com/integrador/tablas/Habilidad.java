@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Habilidades {
+public class Habilidad {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;

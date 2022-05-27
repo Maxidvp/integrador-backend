@@ -1,4 +1,4 @@
-package com.integrador.filtros;
+package com.integrador.JWT;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,17 +13,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -32,39 +29,46 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AutorizacionFiltro extends OncePerRequestFilter{
 
+	@Autowired
+	public CrearJWT crearJWT;
+
+	public AutorizacionFiltro(CrearJWT crearJWT) {
+		this.crearJWT = crearJWT;
+	}
+
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		if(request.getServletPath().equals("/api/login") || request.getServletPath().equals("/api/token/refresh") || request.getServletPath().equals("/personas/publico/**")) {
-			System.out.println("Autorizacion filtro - 40");
+		System.out.println("AutorizacionFiltro - doFilterInternal");
+		if(request.getServletPath().equals("/usuario/login")
+				|| request.getServletPath().equals("/usuario/token/refresh")
+				|| request.getServletPath().equals("/usuario/usernamelibre/**")
+				|| request.getServletPath().equals("/usuario/emaillibre/**")
+				|| request.getServletPath().equals("/persona/publico/**")) {
 			filterChain.doFilter(request, response);
 		}else {
-			System.out.println("Autorizacion filtro - 42");
 			String authorizationHeader=request.getHeader(HttpHeaders.AUTHORIZATION);
-			
-			System.out.println(authorizationHeader);
 			if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
 				try {//Aca si se esta autorizado
-					System.out.println("Autorizacion filtro - 48");
+					System.out.println("AutorizacionFiltro - doFilterInternal - authorizationHeader try");
 					String token = authorizationHeader.substring("Bearer ".length());
-					Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+					/*Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
 					JWTVerifier verifier = JWT.require(algorithm).build();
-					DecodedJWT decodedJWT = verifier.verify(token);
+					DecodedJWT decodedJWT = verifier.verify(token);*/
+					DecodedJWT decodedJWT = crearJWT.decodJWT(token);
 					String username = decodedJWT.getSubject();
 					String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
 					Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
 					stream(roles).forEach(role -> {
 						authorities.add(new SimpleGrantedAuthority(role));
 					});
-					System.out.println("Autorizacion filtro - 59: username Subject");
-					System.out.println(username);
-					UsernamePasswordAuthenticationToken authenticationToken = 
+					UsernamePasswordAuthenticationToken authenticationToken =
 							new UsernamePasswordAuthenticationToken(username,null,authorities);
 					SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 					filterChain.doFilter(request, response);
 				}catch(Exception exception) {//Aca si NO se esta autorizado
-					System.out.println("Autorizacion filtro - 64");
-					log.error("Error de logeo en: {}", exception.getMessage());
+					System.out.println("AutorizacionFiltro - doFilterInternal - authorizationHeader catch");
+					log.error("Error de logeo en : {}", exception.getMessage());
 					response.setHeader("error", exception.getMessage());
 					//response.setStatus(HttpStatus.FORBIDDEN.value());
 					//response.sendError(HttpStatus.FORBIDDEN.value());

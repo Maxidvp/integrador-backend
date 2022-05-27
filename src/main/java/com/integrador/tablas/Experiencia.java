@@ -9,13 +9,12 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Proyectos {
+public class Experiencia {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	private String titulo;
 	private String periodo;
-	private String descripcion;
-	private String url;
-	private String fotos;
+	private String lugar;
+	private String actividades;
+	private String imagen;
 }

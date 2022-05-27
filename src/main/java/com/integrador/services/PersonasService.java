@@ -6,8 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.integrador.repositories.PersonasRepository;
-import com.integrador.repositories.UsuarioRepository;
-import com.integrador.tablas.Personas;
+import com.integrador.tablas.Persona;
 
 @Service
 public class PersonasService implements IPersonasService{
@@ -16,13 +15,13 @@ public class PersonasService implements IPersonasService{
 	private PersonasRepository personaRepository;
 	
 	@Override
-	public List<Personas> getPersona() {
-		List<Personas> listaPersonas = personaRepository.findAll();
+	public List<Persona> getPersona() {
+		List<Persona> listaPersonas = personaRepository.findAll();
 		return listaPersonas;
 	}
 
 	@Override
-	public Personas savePersona(Personas persona) {
+	public Persona savePersona(Persona persona) {
 		return personaRepository.save(persona);
 	}
 
@@ -32,8 +31,8 @@ public class PersonasService implements IPersonasService{
 	}
 
 	@Override
-	public Personas findPersona(Long id) {
-		Personas persona = personaRepository.findById(id).orElse(null);
+	public Persona findPersona(Long id) {
+		Persona persona = personaRepository.findById(id).orElse(null);
 		return persona;
 	}
 
@@ -46,4 +45,9 @@ public class PersonasService implements IPersonasService{
 	public Long getIdByUsername(String username) {
 		return personaRepository.getIdByUsername(username);
 	}
+
+	/*@Override
+	public List<Long> idsLista(String tabla, String fk, Long id) {
+		return personaRepository.idsList(tabla, fk, id);
+	}*/
 }

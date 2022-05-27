@@ -1,6 +1,10 @@
 # Integrador
 
-Este proyecto fue generado en Spring Boot [Spring Boot](https://spring.io/projects/spring-boot) version 2.6.2
+Este proyecto fue generado en [Spring Boot](https://spring.io/projects/spring-boot) version 2.6.2
+
+### Versión 1.1.0
+    CRUD y JWT refactorizados
+    Proyectos ahora admite una lista de fotos
 
 ### Versión 1.0.0 Primer deploy
     Modificación de la DB para indicar portfolios públicos

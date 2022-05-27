@@ -62,11 +62,8 @@ public class UsuarioService implements IUsuarioService, UserDetailsService {
 	public void addRoleToUser(String username, String roleName) {
 		log.info("Agregando el role {} al usuario {}",roleName,username);
 		Usuario user=userRepo.findByUsername(username);
-		log.info("User: {}",user);
 		Role role=roleRepo.findByName(roleName);
-		log.info("Role: {}",role);
 		user.getRoles().add(role);
-		//userRepo.save(user);
 	}
 
 	@Override

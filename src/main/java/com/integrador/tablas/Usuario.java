@@ -3,13 +3,7 @@ package com.integrador.tablas;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,10 +16,11 @@ public class Usuario {
 	private String email;
 	private String username;
 	private String password;
-	//private String theme;
+
 	@ManyToMany(fetch = FetchType.EAGER)
 	private Collection<Role> roles = new ArrayList<>();
 	
 	@OneToOne(fetch = FetchType.EAGER)
-	private Personas persona;
+	@PrimaryKeyJoinColumn
+	private Persona persona;
 }
